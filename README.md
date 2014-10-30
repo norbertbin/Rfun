@@ -1,4 +1,4 @@
 Rfun
 ====
 
-Some R functions I commonly use.
+Some R functions.
