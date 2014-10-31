@@ -14,19 +14,21 @@ getNeighborhoodCluster <- function(adjMat, clusterAssignments) {
 
     nNodes = length(clusterAssignments)
 
-    # ensure that the adjacency matrix is sparse
-    adjMat = Matrix(adjMat)
-
-    # change to 3 column representation
+    # change to sparse 3 column representation
     # IMPORTANT: internal indices in Matrix start with 0 not 1
-    nC3col = as(adjMat, "dgTMatrix")
-    nC3col = matrix(c(nC3col@i+1, nC3col@j+1), ncol = 2)
+    adjMat = as(adjMat, "dgTMatrix")
+
+    clusterCountMat = matrix(0, nrow = nNodes,
+        ncol = length(unique(clusterAssignments)))
+    for(i in 1:length(adjMat@i)) {
+        node = adjMat@i[i+1]
+        cluster = clusterAssignments[adjMat@j[i+1]]
+        clusterCountMat[node, cluster] = clusterCountMat[node, cluster] + 1  
+    }
 
     neighborhoodCluster = vector(length = nNodes)
     for(i in 1:nNodes) {
-        tmpTable = table(clusterAssignments[nC3col[nC3col[,1] == i, 2]])
-        neighborhoodCluster[i] = as.numeric(names(
-                               tmpTable[which.max(tmpTable)]))
+        neighborhoodCluster[i] = which.max(clusterCountMat[i, ])
     }
 
     return( neighborhoodCluster )
