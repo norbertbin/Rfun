@@ -21,8 +21,8 @@ getNeighborhoodCluster <- function(adjMat, clusterAssignments) {
     clusterCountMat = matrix(0, nrow = nNodes,
         ncol = length(unique(clusterAssignments)))
     for(i in 1:length(adjMat@i)) {
-        node = adjMat@i[i+1]
-        cluster = clusterAssignments[adjMat@j[i+1]]
+        node = adjMat@i[i]+1
+        cluster = clusterAssignments[adjMat@j[i]+1]
         clusterCountMat[node, cluster] = clusterCountMat[node, cluster] + 1  
     }
 
